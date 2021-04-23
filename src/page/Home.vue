@@ -125,8 +125,14 @@ export default {
       },
       deleteAll(){
         if(confirm("Deletar todos? Tem certeza?")){
-          dataService.deleteAll();
-          alert('Produto apagado!');
+          dataService.deleteAllProdutos()
+          .then(response =>{
+            console.log(response)
+            alert('Produtos apagados!');
+          })
+          .catch(e=>{
+            console.log(e);
+          })
         } else{
           alert('Cancelado.')
         }
