@@ -25,6 +25,8 @@
 
             <h1 class="mb-5"><strong>GERENCIAR PRODUTOS</strong></h1>
 
+            <button class="bigDel" @click="deleteAll()">Deletar TODOS</button>
+
             <div class=" custom-table-responsive coolTable" id="checkboxes">
                 <table v-if="produtos.length > 0"  class="table custom-table" >
                     <thead>
@@ -73,9 +75,6 @@
 
                 <div v-else><h1>Página ainda vazia.</h1></div>
             </div>
-
-            <button class="bigDel" @click="deleteAll()">Deletar TODOS</button>
-
         </div>
     </div>
   </div>
@@ -276,8 +275,11 @@ button {
 .del{
     background-color:#FF6145; /* Green */
 }
-.bigDel{
+button.bigDel{
   background-color: red;
+  position: absolute;
+  top:221px;
+  left: 1131px;
 }
 .search{
     border-radius: 5%;
