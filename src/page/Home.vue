@@ -1,3 +1,4 @@
+
 <template>
   <div class="home">
     <div class="content">
@@ -12,8 +13,18 @@
             <input  type="text" v-model="search" class="search" placeholder="Pesquise pelo nome...">
             <button @click="searchState" class="search">Pesquisar</button>
         </div>
+
         <div class="container">
+            <h3 class="sortBy">Organizar por:</h3>
+
+            <button class="edit" @click="sortCode">Código</button>
+            <button class="edit" @click="sortName">Nome</button>
+            <button class="edit" @click="sortPrice">Preço</button>
+            <button class="edit" @click="sortCategory">Categoria</button>
+            <button class="edit" @click="sortStatus">Status</button>
+
             <h1 class="mb-5"><strong>GERENCIAR PRODUTOS</strong></h1>
+
             <div class=" custom-table-responsive coolTable" id="checkboxes">
                 <table v-if="produtos.length > 0"  class="table custom-table" >
                     <thead>
@@ -27,6 +38,7 @@
                           <th scope="col">OPÇÕES</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <tr v-for="produto in filteredProdutos" :key="produto.id" scope="row">
                             <td class="center">
@@ -58,23 +70,27 @@
                         <button v-if="searchOn" class="edit" @click="searchState">Voltar</button>
                     </tbody>
                 </table>
+
                 <div v-else><h1>Página ainda vazia.</h1></div>
             </div>
+
             <button class="bigDel" @click="deleteAll()">Deletar TODOS</button>
+
         </div>
     </div>
   </div>
 </template>
 
 <script>
+
 import dataService from '../services/dataService';
 import ModalEdit from '../components/ModalEdit';
-import ModalNew from '../components/ModalNew';  
+import ModalNew from '../components/ModalNew'; 
 export default {
     name: "Home",
     components:{
       ModalEdit,
-      ModalNew
+      ModalNew,
     },
     data(){
       return{
@@ -109,7 +125,6 @@ export default {
       },
       editProduto(produto){
           this.editPress = !this.editPress;
-
           if(this.editPress){
             this.fullForm = produto;
           }
@@ -123,10 +138,31 @@ export default {
       newProduto(){
         this.newPress = !this.newPress;
       },
+      sortCode(){
+        this.produtos.sort((a, b) => a.code > b.code ? 1: -1);
+      },
+      sortPrice(){
+        this.produtos.sort((a, b) => a.price > b.price ? 1: -1);
+      },
+      sortName(){
+        this.produtos.sort((a, b) => a.name > b.name ? 1: -1);
+      },
+      sortCategory(){
+        this.produtos.sort((a, b) => a.category > b.category ? 1: -1);
+      },
+      sortStatus(){
+        this.produtos.sort((a, b) => a.status > b.status ? 1: -1);
+      },
       deleteAll(){
         if(confirm("Deletar todos? Tem certeza?")){
-          dataService.deleteAll();
-          alert('Produto apagado!');
+          dataService.deleteAllProdutos()
+          .then(response =>{
+            console.log(response)
+            alert('Produtos apagados!');
+          })
+          .catch(e=>{
+            console.log(e);
+          })
         } else{
           alert('Cancelado.')
         }
@@ -162,14 +198,11 @@ export default {
 </script>
 
 <style scoped>
+
 div.container{
   width: 900px;
   margin: 0 auto;
 }
-
-
-
-
 .checkmark {
   position: absolute;
   top: 0;
@@ -178,13 +211,11 @@ div.container{
   width: 25px;
   background-color: lightgrey;
 }
-
 .checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
-
 .lblChk{
    display: block;
   position: relative;
@@ -207,19 +238,15 @@ div.container{
   height: 0;
   width: 0;
 }
-
 .lblChk:hover input ~ .checkmark {
   background-color: darkgrey;
 }
-
 .lblChk input:checked ~ .checkmark {
   background-color: #2196F3;
 }
-
 .lblChk input:checked ~ .checkmark:after {
   display: block;
 }
-
 .lblChk .checkmark:after {
   left: 9px;
   top: 5px;
@@ -231,7 +258,6 @@ div.container{
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-
 button {
   cursor: pointer;
   border: none;
@@ -244,19 +270,15 @@ button {
   font-size: 16px;
   padding: 10px;
 }
-
 .new{
     background-color: #3D9776; /* Green */
 }
-
 .del{
     background-color:#FF6145; /* Green */
 }
-
 .bigDel{
   background-color: red;
 }
-
 .search{
     border-radius: 5%;
 }
@@ -266,31 +288,21 @@ input.search{
     border: 2px solid black;
     height: 35px;
 }
-
 button.search{
     background-color: #55CBCD;
 }
-
 .delete{
     margin-left: 20px;
 }
-
 .edit{
   background-color: #55CBCD;
 }
-
 tbody tr {
   text-align: center;
 }
-
 tbody td{
     color: white;
     padding: 10px 5px;
-}
-
-tbody th{
-  position: sticky;
-  padding: 10px 5px;
 }
 
 .center{
@@ -301,26 +313,25 @@ tbody th{
   position: relative;
   padding-left: 33px;
 }
-
 .row{
   margin-left: 10px;
 }
-
 .coolTable{
         overflow-y: hidden, scroll;
         overflow-x:hidden;
         height: 550px;
         display: block;
     }
-
 .coolTable table{
   border-radius: 4px;
 }
-
-
 .coolTable table th{
   padding: 20px 5px;
   position: sticky;
+  background-color: rgb(41, 40, 40);
 }
 
+h3{
+  color: white;
+}
 </style>
